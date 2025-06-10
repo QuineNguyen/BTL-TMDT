@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PGearShop - Xem Hóa Đơn</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="bg-dark text-white py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="fs-3 fw-bold text-white text-decoration-none" th:href="@{/}">PGearShop</a>
+      <form class="flex-grow-1 mx-3" action="/timkiem" method="get">
+        <input class="form-control" type="search" name="q" placeholder="Tìm kiếm sản phẩm…" />
+      </form>
+      <div class="d-flex align-items-center">
+        <div class="dropdown" th:if="${nguoiDung != null}">
+          <a class="text-white dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            <span th:text="'Xin chào, ' + ${nguoiDung.tenNguoiDung}">Xin chào</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" th:href="@{/thongtincanhan}">Thông tin cá nhân</a></li>
+            <li><a class="dropdown-item" th:href="@{/dangxuat}">Đăng xuất</a></li>
+          </ul>
+        </div>
+        <a th:if="${nguoiDung == null}" href="/dangnhap" class="btn btn-outline-light">Đăng nhập</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container my-5">
+    <div class="row">
+      <!-- THÔNG TIN NGƯỜI ĐẶT HÀNG -->
+      <div class="col-md-6 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2>Thông tin người đặt hàng</h2>
+          <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#selectReceiverModal">Chọn người
+            đặt hàng</button>
+        </div>
+        <form id="orderForm" method="post" th:action="@{/save-order}">
+          <input type="hidden" id="voucherCode" name="voucherCode" value="" />
+          <input type="hidden" id="thongTinNhanHangID" name="thongTinNhanHangID" th:value="${matchedReceiver != null ? matchedReceiver.id : ''}" />
+          <div class="mb-3">
+            <label for="tenNguoiNhan" class="form-label">Tên người nhận</label>
+            <input type="text" id="tenNguoiNhan" name="tenNguoiNhan" class="form-control"
+              th:value="${matchedReceiver != null ? matchedReceiver.tenNguoiNhan : ''}" readonly required />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control"
+              th:value="${matchedReceiver != null ? matchedReceiver.email : ''}" readonly required />
+          </div>
+          <div class="mb-3">
+            <label for="sdt" class="form-label">Số điện thoại</label>
+            <input type="text" id="sdt" name="sdt" class="form-control"
+              th:value="${matchedReceiver != null ? matchedReceiver.sdt : ''}" readonly required />
+          </div>
+          <div class="mb-3">
+            <label for="diachi" class="form-label">Địa chỉ</label>
+            <input type="text" id="diachi" name="diachi" class="form-control"
+              th:value="${matchedReceiver != null ? matchedReceiver.diachi : ''}" readonly required />
+          </div>
+          <!-- <div class="text-center mt-4">
+            <button type="button" id="saveOrderButton" class="btn btn-success">Lưu hóa đơn</button>
+          </div> -->
+        </form>
+      </div>
+
+      <!-- THÔNG TIN CÁC MẶT HÀNG -->
+      <div class="col-md-6 mb-4">
+        <h2>Thông tin các mặt hàng</h2>
+        <table class="table table-bordered mt-3">
+          <thead class="table-dark">
+            <tr>
+              <th>Hình ảnh</th>
+              <th>Sản phẩm</th>
+              <th>Giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="item : ${cart}">
+              <td><img th:src="${item.image}" style="width:100px" class="img-thumbnail" /></td>
+              <td th:text="${item.name}">Tên SP</td>
+              <td th:text="${#numbers.formatDecimal(item.priceNumeric,0,'COMMA',0,'POINT')}+'₫'">Giá</td>
+              <td th:text="${item.quantity}">SL</td>
+              <td th:text="${#numbers.formatDecimal(item.quantity*item.priceNumeric,0,'COMMA',0,'POINT')}+'₫'">TT</td>
+            </tr>
+          </tbody>
+        </table>
+        <h4 class="text-end">
+          Tổng tiền: <span id="totalPrice"
+            th:text="${#numbers.formatDecimal(totalPrice,0,'COMMA',0,'POINT')}+'₫'"></span>
+        </h4>
+        <div class="mt-3">
+          <label for="voucherSelect" class="form-label">Chọn voucher:</label>
+          <select id="voucherSelect" class="form-select">
+            <option value="" selected>Không sử dụng voucher</option>
+            <option th:each="voucher : ${vouchers}" th:value="${voucher.maVoucher}" th:text="${voucher.tenVoucher}">
+            </option>
+          </select>
+        </div>
+        <h4 class="text-end mt-3">
+          Tổng tiền sau giảm: <span id="discountedTotal">0₫</span>
+        </h4>
+        <div class="text-center mt-4">
+            <button type="button" id="saveOrderButton" class="btn btn-success" onclick="submitOrderForm()">Lưu hóa đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CHỌN NGƯỜI ĐẶT HÀNG -->
+  <div class="modal fade" id="selectReceiverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Chọn người đặt hàng</h5>
+          <button class="btn btn-success btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#addReceiverModal">
+            <i class="bi bi-plus-lg"></i> Thêm
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead class="table-dark">
+              <tr>
+                <th>Tên</th>
+                <th>Email</th>
+                <th>Điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Chọn</th>
+              </tr>
+            </thead>
+            <tbody id="receiverTableBody" th:each="r : ${receivers}">
+              <tr>
+                <td th:text="${r.tenNguoiNhan}"></td>
+                <td th:text="${r.email}"></td>
+                <td th:text="${r.sdt}"></td>
+                <td th:text="${r.diachi}"></td>
+                <td>
+                  <button class="btn btn-primary btn-sm" th:attr="data-id=${r.id}" onclick="selectReceiver(this)">
+                    Chọn
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL THÊM NGƯỜI ĐẶT HÀNG -->
+  <div class="modal fade" id="addReceiverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm thông tin nhận hàng</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="addReceiverForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Tên người nhận</label>
+              <input id="newTen" name="tenNguoiNhan" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input id="newEmail" name="email" type="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Số điện thoại</label>
+              <input id="newSdt" name="sdt" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Địa chỉ</label>
+              <input id="newDiachi" name="diachi" class="form-control" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0">
+      <div class="d-flex">
+        <div class="toast-body">Thêm thông tin nhận hàng thành công!</div>
+        <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-dark text-light pt-4 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h5>PGearShop</h5>
+          <p>Chuyên cung cấp linh kiện máy tính chính hãng.<br />
+            Địa chỉ: Km10 đường Trần Phú, quận Hà Đông, Hà Nội<br />
+            SĐT: 0999 999 999<br />
+            Email: contact@pgearshop.vn
+          </p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5>Chính sách đổi trả</h5>
+          <p>Hỗ trợ đổi trả trong vòng <strong>7 ngày</strong> nếu sản phẩm lỗi kỹ thuật hoặc không đúng mô tả.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5>Bảo hành chính hãng</h5>
+          <p>Tất cả sản phẩm bảo hành từ <strong>6–36 tháng</strong> tùy loại. Hỗ trợ nhanh tại cửa hàng.</p>
+        </div>
+      </div>
+      <div class="text-center py-3 border-top border-secondary">
+        &copy; 2025 PGearShop. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const rows = document.querySelectorAll('#receiverTableBody tr');
+      console.log('Danh sách thông tin nhận hàng:');
+      rows.forEach(row => {
+        const id = row.querySelector('button').dataset.id; // Lấy ID từ thuộc tính data-id của nút
+        const tenNguoiNhan = row.querySelector('td:nth-child(1)').textContent.trim();
+        const email = row.querySelector('td:nth-child(2)').textContent.trim();
+        const sdt = row.querySelector('td:nth-child(3)').textContent.trim();
+        const diachi = row.querySelector('td:nth-child(4)').textContent.trim();
+
+        console.log(`ID: ${id}`);
+        console.log(`Tên người nhận: ${tenNguoiNhan}`);
+        console.log(`Email: ${email}`);
+        console.log(`Số điện thoại: ${sdt}`);
+        console.log(`Địa chỉ: ${diachi}`);
+        console.log('-------------------------');
+      });
+    });
+
+    function selectReceiver(btn) {
+      const id = btn.dataset.id;
+
+      // Gửi yêu cầu đến backend để lấy thông tin chi tiết
+      fetch(`/receivers/${id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(receiver => {
+          console.log('Thông tin nhận hàng được chọn:', receiver);
+
+          // Gán giá trị vào các trường trong form
+          document.getElementById('tenNguoiNhan').value = receiver.tenNguoiNhan || '';
+          document.getElementById('email').value = receiver.email || '';
+          document.getElementById('sdt').value = receiver.sdt || '';
+          document.getElementById('diachi').value = receiver.diachi || '';
+
+          // Đóng modal sau khi chọn
+          bootstrap.Modal.getInstance(document.getElementById('selectReceiverModal')).hide();
+        })
+        .catch(error => console.error('Lỗi khi lấy thông tin nhận hàng:', error));
+    }
+
+    document.getElementById('addReceiverForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(this));
+      fetch('/receivers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(r => r.json())
+        .then(receiver => {
+          const tbody = document.getElementById('receiverTableBody');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+          <td>${receiver.tenNguoiNhan}</td>
+          <td>${receiver.email}</td>
+          <td>${receiver.sdt}</td>
+          <td>${receiver.diachi}</td>
+          <td>
+            <button class="btn btn-primary btn-sm"
+                    data-ten-nguoi-nhan="${receiver.tenNguoiNhan}"
+                    data-email="${receiver.email}"
+                    data-sdt="${receiver.sdt}"
+                    data-dia-chi="${receiver.diachi}"
+                    onclick="selectReceiver(this)">Chọn</button>
+          </td>`;
+          tbody.prepend(tr);
+          bootstrap.Modal.getInstance(
+            document.getElementById('addReceiverModal')
+          ).hide();
+          new bootstrap.Toast(
+            document.getElementById('successToast')
+          ).show();
+        })
+        .catch(() => alert('Lỗi khi thêm mới thông tin nhận hàng.'));
+    });
+
+    document.getElementById('voucherSelect').addEventListener('change', function () {
+      const selectedVoucher = this.value;
+
+      if (!selectedVoucher) {
+        // Không sử dụng voucher
+        document.getElementById('discountedTotal').textContent = document.getElementById('totalPrice').textContent;
+        return;
+      }
+
+      // Gửi yêu cầu đến backend để lấy thông tin voucher
+      fetch(`/vouchers/${selectedVoucher}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(voucher => {
+          const totalPriceElement = document.getElementById('totalPrice');
+          const totalPrice = parseFloat(totalPriceElement.textContent.replace(/[₫,]/g, ''));
+          let discountedTotal = totalPrice;
+          console.log('Voucher được chọn:', voucher);
+
+          // Áp dụng giảm giá theo phần trăm
+          if (voucher.giamGiaTheoPhanTram) {
+            discountedTotal -= (totalPrice * voucher.giamGiaTheoPhanTram / 100);
+          }
+
+          // Đảm bảo tổng tiền không âm
+          discountedTotal = Math.max(discountedTotal, 0);
+
+          // Cập nhật tổng tiền sau giảm
+          document.getElementById('discountedTotal').textContent = discountedTotal.toLocaleString('vi-VN') + '₫';
+        })
+        .catch(error => console.error('Lỗi khi lấy thông tin voucher:', error));
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Lấy giá trị voucher đã chọn (nếu có)
+      const voucherSelect = document.getElementById('voucherSelect');
+      const selectedVoucher = voucherSelect.value;
+
+      const totalPriceElement = document.getElementById('totalPrice');
+      const totalPrice = parseFloat(totalPriceElement.textContent.replace(/[₫,]/g, ''));
+
+      let discountedTotal = totalPrice;
+
+      if (selectedVoucher) {
+        // Gửi yêu cầu đến backend để lấy thông tin voucher
+        fetch(`/vouchers/${selectedVoucher}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        })
+          .then(response => response.json())
+          .then(voucher => {
+            console.log('Voucher được chọn:', voucher);
+
+            // Áp dụng giảm giá theo phần trăm
+            if (voucher.giamGiaTheoPhanTram) {
+              discountedTotal -= (totalPrice * voucher.giamGiaTheoPhanTram / 100);
+            }
+
+            // Đảm bảo tổng tiền không âm
+            discountedTotal = Math.max(discountedTotal, 0);
+
+            // Cập nhật tổng tiền sau giảm
+            document.getElementById('discountedTotal').textContent = discountedTotal.toLocaleString('vi-VN') + '₫';
+          })
+          .catch(error => console.error('Lỗi khi lấy thông tin voucher:', error));
+      } else {
+        // Không sử dụng voucher
+        document.getElementById('discountedTotal').textContent = totalPriceElement.textContent;
+      }
+    });
+
+    function submitOrderForm() {
+      // Lấy giá trị của trường voucherCode
+      const voucherCode = document.getElementById('voucherSelect').value;
+      // Gán giá trị cho trường ẩn voucherCode trong form
+      document.getElementById('voucherCode').value = voucherCode;
+
+      // Gửi form
+      document.getElementById('orderForm').submit();
+    }
+  </script>
+</body>
+
+</html>

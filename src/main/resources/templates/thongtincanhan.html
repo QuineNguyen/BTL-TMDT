@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+    <header class="bg-dark text-white py-3">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+
+                <!-- Nút quay về trang chủ -->
+                <a th:if="${isNhanVien}" th:href="@{/admin/trangchu}" class="btn btn-outline-light">← Trang chủ</a>
+                <a th:unless="${isNhanVien}" th:href="@{/}" class="btn btn-outline-light">← Trang chủ</a>
+
+                <!-- Tiêu đề chính giữa -->
+                <div class="fs-3 fw-bold text-center flex-grow-1">Thông tin người dùng</div>
+
+                <!-- Để giữ cân bằng chiều rộng (có thể thêm div trống) -->
+                <div style="width: 120px;"></div>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid mt-4 mb-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="#thongtinchung" class="list-group-item list-group-item-action active"
+                        data-bs-toggle="list">Thông tin chung</a>
+                    <a href="#suathongtin" class="list-group-item list-group-item-action" data-bs-toggle="list">Sửa đổi
+                        thông tin cơ bản</a>
+                    <a href="#doimatkhau" class="list-group-item list-group-item-action" data-bs-toggle="list">Đổi mật
+                        khẩu</a>
+                    <a th:href="@{/lichsugiaodich}" class="list-group-item list-group-item-action"
+                        th:if="${isKhachHang}">
+                        Lịch sử mua hàng
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-9 tab-content">
+                <!-- Thông tin chung -->
+                <div class="tab-pane fade show active" id="thongtinchung">
+                    <h4>Thông tin người dùng</h4>
+                    <div th:if="${thongBaoCapNhat}" class="alert alert-success alert-dismissible fade show"
+                        role="alert">
+                        <span th:text="${thongBaoCapNhat}">Cập nhật thành công!</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <!-- Thông báo đổi mật khẩu -->
+                    <div th:if="${thongBaoDoiMatKhau}" class="alert"
+                        th:classappend="${thongBaoDoiMatKhau.contains('thành công')} ? 'alert-success' : 'alert-danger'"
+                        role="alert">
+                        <span th:text="${thongBaoDoiMatKhau}"></span>
+                    </div>
+
+                    <p style="padding-left: 40px;"><strong>Tên:</strong> <span
+                            th:text="${nguoiDung.tenNguoiDung}"></span></p>
+                    <p style="padding-left: 40px;"><strong>Email:</strong> <span th:text="${nguoiDung.email}"></span>
+                    </p>
+                    <p style="padding-left: 40px;"><strong>SĐT:</strong> <span th:text="${nguoiDung.sdt}"></span></p>
+                    <p style="padding-left: 40px;"><strong>Địa chỉ:</strong> <span th:text="${nguoiDung.diaChi}"></span>
+                    </p>
+                </div>
+
+                <!-- Sửa đổi thông tin cơ bản -->
+                <div class="tab-pane fade" id="suathongtin">
+                    <h4>Sửa đổi thông tin</h4>
+                    <form th:action="@{/thongtincanhan/capnhat}" method="post">
+                        <div class="mb-3">
+                            <label for="sdt" class="form-label">Số điện thoại mới</label>
+                            <input type="text" class="form-control" name="sdt" th:value="${nguoiDung.sdt}" required
+                                style="width: 60%;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="diaChi" class="form-label">Địa chỉ mới</label>
+                            <input type="text" class="form-control" name="diaChi" th:value="${nguoiDung.diaChi}"
+                                required style="width: 60%;">
+                        </div>
+                        <button type="submit" class="btn btn-warning">Cập nhật</button>
+                    </form>
+                </div>
+
+
+                <!-- Đổi mật khẩu -->
+                <div class="tab-pane fade" id="doimatkhau">
+                    <h4>Đổi mật khẩu</h4>
+                    <form th:action="@{/thongtincanhan/doimatkhau}" method="post"
+                        onsubmit="return confirm('Bạn có chắc muốn đổi mật khẩu?');">
+                        <div class="mb-3" style="width: 60%;">
+                            <label for="matKhauCu" class="form-label">Mật khẩu cũ</label>
+                            <input type="password" class="form-control" name="matKhauCu" required>
+                        </div>
+                        <div class="mb-3" style="width: 60%;">
+                            <label for="matKhauMoi" class="form-label">Mật khẩu mới</label>
+                            <input type="password" class="form-control" name="matKhauMoi" required>
+                        </div>
+                        <div class="mb-3" style="width: 60%;">
+                            <label for="xacNhanMatKhauMoi" class="form-label">Xác nhận mật khẩu mới</label>
+                            <input type="password" class="form-control" name="xacNhanMatKhauMoi" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Đổi mật khẩu</button>
+                        <div class="mt-2 text-danger" th:if="${thongBao != null}" th:text="${thongBao}"></div>
+                    </form>
+                </div>
+
+                <!-- Lịch sử mua hàng -->
+                <div class="tab-pane fade" id="lichsumuahang" th:if="${isKhachHang}">
+                    <h4>Lịch sử mua hàng</h4>
+                    <p>Chức năng đang phát triển.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

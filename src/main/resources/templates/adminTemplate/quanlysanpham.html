@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <header class="bg-dark text-white py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="fs-3 fw-bold"><a class="no-underline" href="/admin/trangchu">PGearShop Administrator</a></div>
+
+            <div class="d-flex align-items-center">
+
+                <!-- Nếu đã đăng nhập -->
+                <div class="dropdown" th:if="${nguoiDung != null}">
+                    <a class="custom-dropdown dropdown-toggle no-underline" href="#" role="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="'Xin chào, ' + ${nguoiDung.tenNguoiDung}">Xin chào, Tên</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" th:href="@{/thongtincanhan}">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dangxuat}">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Quản lý sản phẩm</h2>
+
+        <div class="d-flex justify-content-end mb-3 align-items-center">
+            <label class="me-2">Lọc theo loại sản phẩm:</label>
+            <form method="get" action="/admin/quanlysanpham" id="filterForm" class="d-flex align-items-center">
+                <select name="loai" onchange="this.form.submit()" class="form-select d-inline w-auto me-2">
+                    <option value="" th:selected="${loaiDangChon == null or loaiDangChon == ''}">Tất cả</option>
+                    <option th:each="loai : ${dsLoaiSanPham}" th:value="${loai}" th:text="${loai}"
+                        th:selected="${loai == loaiDangChon}">
+                    </option>
+                </select>
+
+                <select name="sort" onchange="document.getElementById('filterForm').submit()" class="form-select
+                    d-inline w-auto me-2">
+                    <option value="">-- Sắp xếp --</option>
+                    <option value="maSanPham_asc" th:selected="${sort == 'maSanPham_asc'}">Mã sản phẩm (A → Z)</option>
+                    <option value="maSanPham_desc" th:selected="${sort == 'maSanPham_desc'}">Mã sản phẩm (Z → A)
+                    </option>
+
+                    <option value="tenSanPham_asc" th:selected="${sort == 'tenSanPham_asc'}">Tên sản phẩm (A → Z)
+                    </option>
+                    <option value="tenSanPham_desc" th:selected="${sort == 'tenSanPham_desc'}">Tên sản phẩm (Z → A)
+                    </option>
+
+                    <option value="thuongHieu_asc" th:selected="${sort == 'thuongHieu_asc'}">Thương hiệu (A → Z)
+                    </option>
+                    <option value="thuongHieu_desc" th:selected="${sort == 'thuongHieu_desc'}">Thương hiệu (Z → A)
+                    </option>
+
+                    <option value="ngayThem_desc" th:selected="${sort == 'ngayThem_desc'}">Ngày sửa đổi (Mới → Cũ)
+                    </option>
+                    <option value="ngayThem_asc" th:selected="${sort == 'ngayThem_asc'}">Ngày sửa đổi (Cũ → Mới)
+                    </option>
+
+                    <option value="gia_asc" th:selected="${sort == 'gia_asc'}">Giá (Thấp → Cao)</option>
+                    <option value="gia_desc" th:selected="${sort == 'gia_desc'}">Giá (Cao → Thấp)</option>
+                </select>
+            </form>
+        </div>
+
+        <table class="table table-bordered table-hover mt-3">
+            <thead>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Loại</th>
+                    <th>Thương hiệu</th>
+                    <th>Người thêm</th>
+                    <th>Ngày sửa cuối</th>
+                    <th>Giá</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="sp : ${dsSanPham}">
+                    <td th:text="${sp.maSanPham}"></td>
+                    <td th:text="${sp.tenSanPham}"></td>
+                    <td th:text="${#strings.defaultString(sp.loaiSanPham?.tenLoaiSanPham, 'Không xác định')}"></td>
+                    <td th:text="${sp.thuongHieu.tenThuongHieu}"></td>
+                    <td th:text="${sp.nguoiThem.nguoiDung.tenNguoiDung}"></td>
+                    <td th:text="${#temporals.format(sp.ngayThem, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(sp.gia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td>
+                        <a th:href="@{'/admin/quanlysanpham/chitiet/' + ${sp.id}}">Chi tiết</a> |
+                        <a th:href="@{'/admin/xoasanpham/' + ${sp.id}}"
+                            onclick="return confirm('Bạn có chắc chắn muốn xoá?')">Xoá</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

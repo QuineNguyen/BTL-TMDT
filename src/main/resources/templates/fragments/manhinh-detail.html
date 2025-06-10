@@ -1,0 +1,8 @@
+<div th:fragment="manhinhDetailFragment(chiTietSanPham)">
+    <p><strong>Kích thước:</strong> <span th:text="${chiTietSanPham.kichThuoc}"></span></p>
+    <p><strong>Độ phân giải:</strong> <span th:text="${chiTietSanPham.doPhanGiai}"></span></p>
+    <p><strong>Tấm nền:</strong> <span th:text="${chiTietSanPham.tamNen}"></span></p>
+    <p><strong>Bề mặt:</strong> <span th:text="${chiTietSanPham.beMat}"></span></p>
+    <p><strong>Tần số quét:</strong> <span th:text="${chiTietSanPham.tanSoQuet}"></span>Hz</p>
+    <p><strong>Mô tả:</strong> <span th:text="${chiTietSanPham.mota}"></span></p>
+</div>

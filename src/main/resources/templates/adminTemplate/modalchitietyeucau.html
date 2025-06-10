@@ -1,0 +1,37 @@
+<div th:fragment="chiTietYeuCauModal">
+    <div class="modal fade" id="chiTietYeuCauModal" tabindex="-1" aria-labelledby="chiTietYeuCauModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chiTietYeuCauModalLabel">Chi tiết yêu cầu hoàn tiền</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Người gửi:</strong> <span th:text="${yeuCauDTO.tenNguoiDung}"></span> (<span
+                            th:text="${yeuCauDTO.emailNguoiDung}"></span>)</p>
+                    <p><strong>Mã hóa đơn:</strong> <span th:text="${yeuCauDTO.maHoaDon}"></span></p>
+                    <p><strong>Tên sản phẩm:</strong> <span th:text="${yeuCauDTO.tenSanPham}"></span></p>
+                    <p><strong>Thời gian:</strong> <span
+                            th:text="${#temporals.format(yeuCauDTO.yeuCau.ngayYeuCau, 'dd/MM/yyyy HH:mm')}"></span></p>
+                    <p><strong>Lời nhắn:</strong> <span th:text="${yeuCauDTO.loiNhan}"></span>
+                        <!-- Placeholder: add loiNhan if exists --></p>
+                    <p><strong>Trạng thái:</strong> <span th:text="${yeuCauDTO.yeuCau.trangThai}"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <form th:if="${yeuCauDTO.yeuCau.trangThai == 'Chua duyet'}"
+                        th:action="@{/admin/yeucauhoantien/duyet}" method="post" class="me-2">
+                        <input type="hidden" name="id" th:value="${yeuCauDTO.yeuCau.id}" />
+                        <button type="submit" class="btn btn-success">Chấp nhận</button>
+                    </form>
+                    <form th:if="${yeuCauDTO.yeuCau.trangThai == 'Chua duyet'}" th:action="@{/admin/yeucauhoantien/huy}"
+                        method="post">
+                        <input type="hidden" name="id" th:value="${yeuCauDTO.yeuCau.id}" />
+                        <button type="submit" class="btn btn-danger">Từ chối</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

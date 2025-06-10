@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PGearShop - Giỏ Hàng</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="bg-dark text-white py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="fs-3 fw-bold"><a class="no-underline" href="/">PGearShop</a></div>
+
+            <form class="flex-grow-1 mx-3" role="search" action="/timkiem" method="get">
+                <input class="form-control" type="search" name="q" placeholder="Tìm kiếm sản phẩm..." aria-label="Search">
+            </form>
+
+            <div class="d-flex align-items-center">
+
+                <!-- Nếu đã đăng nhập -->
+                <div class="dropdown" th:if="${nguoiDung != null}">
+                    <a class="custom-dropdown dropdown-toggle" href="#" role="button" id="userDropdown"
+                        aria-expanded="false">
+                        <span th:text="'Xin chào, ' + ${nguoiDung.tenNguoiDung}">Xin chào, Tên</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" th:href="@{/thongtincanhan}">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dangxuat}">Đăng xuất</a></li>
+                    </ul>
+                </div>
+
+                <!-- Nếu chưa đăng nhập -->
+                <a href="/dangnhap" th:if="${nguoiDung == null}" class="btn btn-outline-light">Đăng nhập</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Danh sách sản phẩm trong giỏ hàng -->
+    <div class="container my-5">
+        <h2 class="mb-4">Giỏ hàng của bạn</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" /> <!-- Checkbox chọn tất cả -->
+                        </th>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="cartTableBody">
+                    <!-- Sản phẩm sẽ được thêm vào đây bằng JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center align-items-center mt-4">
+            <a href="/order" class="btn btn-success">Đặt hàng</a>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light pt-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Thông tin shop -->
+                <div class="col-md-4 mb-3">
+                    <h5>PGearShop</h5>
+                    <p>Chuyên cung cấp linh kiện máy tính chính hãng.<br />
+                        Địa chỉ: Km10 đường Trần Phú, quận Hà Đông, thành phố Hà Nội<br />
+                        SĐT: 0999 999 999<br />
+                        Email: contact@pgearshop.vn
+                    </p>
+                </div>
+
+                <!-- Chính sách đổi trả -->
+                <div class="col-md-4 mb-3">
+                    <h5>Chính sách đổi trả</h5>
+                    <p>Hỗ trợ đổi trả trong vòng <strong>7 ngày</strong> nếu sản phẩm bị lỗi kỹ thuật hoặc không đúng mô tả.
+                    </p>
+                </div>
+
+                <!-- Chính sách bảo hành -->
+                <div class="col-md-4 mb-3">
+                    <h5>Bảo hành chính hãng</h5>
+                    <p>Tất cả sản phẩm đều được bảo hành chính hãng từ <strong>6 đến 36 tháng</strong> tùy loại. Hỗ trợ bảo
+                        hành nhanh tại cửa hàng.</p>
+                </div>
+            </div>
+
+            <div class="text-center py-3 border-top border-secondary">
+                &copy; 2025 GearShop. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // localStorage.removeItem('cart'); // Xóa giỏ hàng khỏi localStorage sau khi tải trang
+            const cartTableBody = document.getElementById('cartTableBody');
+            const selectAllCheckbox = document.getElementById('selectAll');
+
+            // Hàm hiển thị giỏ hàng
+            function renderCart() {
+                cartTableBody.innerHTML = '';
+                cart.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <input type="checkbox" class="select-item" data-index="${index}" />
+                        </td>
+                        <td><img src="${item.image}" alt="${item.name}" class="img-thumbnail" style="width: 100px;"></td>
+                        <td>${item.name}</td>
+                        <td>${item.price.toLocaleString()}</td>
+                        <td>
+                            <input type="number" class="form-control" value="${item.quantity}" min="1" 
+                                data-index="${index}" style="width: 80px; text-align: center;">
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" data-index="${index}">Xóa</button>
+                        </td>
+                    `;
+                    cartTableBody.appendChild(row);
+                });
+            }
+
+            // Xử lý thay đổi số lượng
+            cartTableBody.addEventListener('input', function (e) {
+                if (e.target.tagName === 'INPUT') {
+                    const index = e.target.getAttribute('data-index');
+                    const newQuantity = parseInt(e.target.value, 10);
+                    if (newQuantity > 0) {
+                        cart[index].quantity = newQuantity;
+                        localStorage.setItem('cart', JSON.stringify(cart));
+
+                        // Cập nhật tổng tiền
+                        updateTotalPrice();
+                    }
+                }
+            });
+
+            // Xử lý xóa sản phẩm
+            cartTableBody.addEventListener('click', function (e) {
+                if (e.target.tagName === 'BUTTON') {
+                    const index = e.target.getAttribute('data-index');
+                    cart.splice(index, 1);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    renderCart();
+                }
+            });
+
+            // Xử lý checkbox "Chọn tất cả"
+            selectAllCheckbox.addEventListener('change', function () {
+                const itemCheckboxes = document.querySelectorAll('.select-item');
+                itemCheckboxes.forEach((checkbox) => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+
+            // Xử lý lưu các sản phẩm đã chọn vào session
+            document.querySelector('.btn-success').addEventListener('click', function () {
+                const selectedItems = [];
+                const itemCheckboxes = document.querySelectorAll('.select-item');
+                itemCheckboxes.forEach((checkbox, index) => {
+                    if (checkbox.checked) {
+                        selectedItems.push(cart[index]);
+                    }
+                });
+
+                // Lưu các sản phẩm đã chọn vào session thông qua API
+                fetch('/save-selected-items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(selectedItems),
+                }).then(() => {
+                    window.location.href = '/order'; // Chuyển sang giao diện xemhoadon.html
+                });
+            });
+
+            // Hiển thị giỏ hàng khi tải trang
+            renderCart();
+        });
+    </script>
+</body>
+
+</html>

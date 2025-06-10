@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 5px;
+}
+
+.admin-menu ul {
+    list-style: none;
+    padding-left: 20%;
+}
+
+.admin-menu li {
+    margin: 10px 0;
+}
+
+.admin-menu a {
+    text-decoration: none;
+    color: #2a4d9b;
+    font-weight: bold;
+}
+
+.no-underline {
+    text-decoration: none;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #fbffca !important;
+    color: rgb(0, 0, 0) !important;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

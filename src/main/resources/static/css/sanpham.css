@@ -1,0 +1,205 @@
+.body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.filter-sidebar {
+    width: 250px;
+    float: left;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filter-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+
+/* Khu vực hiển thị sản phẩm */
+.product-list {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.product-price {
+    color: #d0021b;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* flex: 0 0 20%;
+    max-width: 200px;
+    min-width: 180px; */
+    width: 90%;
+    margin-right: 16px;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    scroll-snap-align: start;
+}
+
+.card:hover {
+    box-shadow: 0 6px 15px rgb(0 0 0 / 0.2);
+}
+
+.card-img-top {
+    object-fit: contain;
+    height: 200px;
+}
+
+.card-body {
+    padding: 12px;
+}
+
+.card-body h5 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+}
+
+.card-body p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.price {
+    font-weight: bold;
+    color: #e53935;
+}
+
+/* Sắp xếp */
+.sort-select {
+    margin-bottom: 15px;
+}
+
+/* Header styles */
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px 0;
+}
+
+header .fs-3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header a.no-underline {
+    text-decoration: none;
+    color: white;
+}
+
+header a.no-underline:hover {
+    color: #ffc107; /* Màu vàng nhạt khi hover */
+}
+
+.btn-warning.position-relative {
+    margin-right: 15px; /* Tạo khoảng cách bên phải giữa giỏ hàng và nút Đăng nhập */
+}
+
+.custom-dropdown {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.custom-dropdown:focus,
+.custom-dropdown:hover {
+    color: #ffc107; /* Màu khi hover (vàng nhạt) */
+    text-decoration: none;
+}
+
+/* Dropdown giỏ hàng */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* Hiển thị ngay bên dưới nút giỏ hàng */
+    left: auto;
+    right: 0; /* Căn phải */
+    z-index: 1050; /* Đảm bảo hiển thị đè lên các phần tử khác */
+    display: none; /* Mặc định ẩn */
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-menu.show {
+    display: block; /* Hiển thị khi được kích hoạt */
+}
+
+.dropdown-header {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+#cartItems {
+    max-height: 200px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Cuộn dọc nếu danh sách quá dài */
+}
+
+#cartItems p {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.dropdown-item {
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #ffc107;
+}
+
+.no-underline {
+    text-decoration: none;
+    color: white;
+}

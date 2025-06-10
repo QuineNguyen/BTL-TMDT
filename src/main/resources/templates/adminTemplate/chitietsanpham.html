@@ -1,0 +1,170 @@
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chi tiết sản phẩm</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" th:href="@{/css/admin.css}">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+        <header class="bg-dark text-white py-3">
+                <div class="container d-flex align-items-center justify-content-between">
+                        <div class="fs-3 fw-bold"><a class="no-underline" href="/admin/trangchu">PGearShop
+                                        Administrator</a></div>
+
+                        <div class="d-flex align-items-center">
+
+                                <!-- Nếu đã đăng nhập -->
+                                <div class="dropdown" th:if="${nguoiDung != null}">
+                                        <a class="custom-dropdown dropdown-toggle no-underline" href="#" role="button"
+                                                id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span th:text="'Xin chào, ' + ${nguoiDung.tenNguoiDung}">Xin chào,
+                                                        Tên</span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                                <li><a class="dropdown-item" th:href="@{/thongtincanhan}">Thông tin cá
+                                                                nhân</a></li>
+                                                <li><a class="dropdown-item" th:href="@{/dangxuat}">Đăng xuất</a></li>
+                                        </ul>
+                                </div>
+                        </div>
+                </div>
+        </header>
+
+        <body>
+                <h2 class="mb-3 mt-2" style="padding-left: 10%;">Chi tiết sản phẩm</h2>
+
+                <!-- Thông tin chung -->
+                <div class="mb-4 container">
+                        <p><strong>Tên:</strong> <span th:text="${sanPham.tenSanPham}"></span></p>
+                        <p><strong>Giá:</strong> <span
+                                        th:text="${#numbers.formatDecimal(sanPham.gia, 0, 'COMMA', '0', 'POINT')}"></span>
+                                VNĐ</p>
+                        <p><strong>Thương hiệu:</strong> <span th:text="${sanPham.thuongHieu.tenThuongHieu}"></span></p>
+                        <p><strong>Loại sản phẩm:</strong> <span th:text="${sanPham.loaiSanPham.tenLoaiSanPham}"></span>
+                        </p>
+                        <p><strong>Ngày thêm:</strong> <span
+                                        th:text="${#temporals.format(sanPham.ngayThem, 'dd/MM/yyyy HH:mm')}"></span></p>
+                </div>
+                <div class="mb-4 container">
+                        <img th:src="@{'/images/product/' + ${sanPham.hinhAnh}}" alt="Ảnh sản phẩm" width="300"
+                                style="border: 1px solid #ccc; padding: 10px;" />
+                </div>
+
+                <hr>
+
+                <!-- Chi tiết theo loại -->
+                <div class="mb-4 container">
+                        <div th:if="${loaiSanPham == 'Mainboard'}">
+                                <p th:if="${loaiSanPham == 'Mainboard'}"><strong>Model:</strong> <span
+                                                th:text="${chiTietSanPham.modelMain}"></span></p>
+                                <p th:if="${loaiSanPham == 'Mainboard'}"><strong>Chipset:</strong> <span
+                                                th:text="${chiTietSanPham.chipset}"></span></p>
+                                <p th:if="${loaiSanPham == 'Mainboard'}"><strong>Socket:</strong> <span
+                                                th:text="${chiTietSanPham.socketMain}"></span></p>
+                                <p th:if="${loaiSanPham == 'Mainboard'}"><strong>Kích thước:</strong> <span
+                                                th:text="${chiTietSanPham.kichThuoc}"></span></p>
+                                <p th:if="${loaiSanPham == 'Mainboard'}"><strong>Số khe RAM:</strong> <span
+                                                th:text="${chiTietSanPham.soKheRAM}"></span></p>
+                                <p th:if="${loaiSanPham == 'Mainboard'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'CPU'}">
+                                <p th:if="${loaiSanPham == 'CPU'}"><strong>Loại CPU:</strong> <span
+                                                th:text="${chiTietSanPham.loaiCPU}"></span></p>
+                                <p th:if="${loaiSanPham == 'CPU'}"><strong>Số nhân / luồng:</strong> <span
+                                                th:text="${chiTietSanPham.soNhansoLuong}"></span></p>
+                                <p th:if="${loaiSanPham == 'CPU'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'RAM'}">
+                                <p th:if="${loaiSanPham == 'RAM'}"><strong>Chuẩn RAM:</strong> <span
+                                                th:text="${chiTietSanPham.chuanRAM}"></span></p>
+                                <p th:if="${loaiSanPham == 'RAM'}"><strong>Dung lượng:</strong> <span
+                                                th:text="${chiTietSanPham.dungLuong}"></span></p>
+                                <p th:if="${loaiSanPham == 'RAM'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'VGA'}">
+                                <p th:if="${loaiSanPham == 'VGA'}"><strong>Chip GPU:</strong> <span
+                                                th:text="${chiTietSanPham.chipGPU}"></span></p>
+                                <p th:if="${loaiSanPham == 'VGA'}"><strong>Kiểu bộ nhớ:</strong> <span
+                                                th:text="${chiTietSanPham.kieuBoNho}"></span></p>
+                                <p th:if="${loaiSanPham == 'VGA'}"><strong>Dung lượng bộ nhớ:</strong> <span
+                                                th:text="${chiTietSanPham.dungLuongBoNho}"></span></p>
+                                <p th:if="${loaiSanPham == 'VGA'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'OCung'}">
+                                <p th:if="${loaiSanPham == 'OCung'}"><strong>Loại ổ cứng:</strong> <span
+                                                th:text="${chiTietSanPham.loaiOCung}"></span></p>
+                                <p th:if="${loaiSanPham == 'OCung'}"><strong>Dung lượng:</strong> <span
+                                                th:text="${chiTietSanPham.dungLuong}"></span></p>
+                                <p th:if="${loaiSanPham == 'OCung'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'PSU'}">
+                                <p th:if="${loaiSanPham == 'PSU'}"><strong>Công suất:</strong> <span
+                                                th:text="${chiTietSanPham.congSuat}"></span>W</p>
+                                <p th:if="${loaiSanPham == 'PSU'}"><strong>Điện áp vào:</strong> <span
+                                                th:text="${chiTietSanPham.dienApVao}"></span>V</p>
+                                <p th:if="${loaiSanPham == 'PSU'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'Cooler'}">
+                                <p th:if="${loaiSanPham == 'Cooler'}"><strong>Loại tản:</strong> <span
+                                                th:text="${chiTietSanPham.loaiTan}"></span></p>
+                                <p th:if="${loaiSanPham == 'Cooler'}"><strong>Socket hỗ trợ LED:</strong> <span
+                                                th:text="${chiTietSanPham.coLED} ? 'Có LED' : 'Không LED'"></span></p>
+                                <p th:if="${loaiSanPham == 'Cooler'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'Man Hinh'}">
+                                <p th:if="${loaiSanPham == 'Man Hinh'}"><strong>Kích thước:</strong> <span
+                                                th:text="${chiTietSanPham.kichThuoc}"></span></p>
+                                <p th:if="${loaiSanPham == 'Man Hinh'}"><strong>Độ phân giải:</strong> <span
+                                                th:text="${chiTietSanPham.doPhanGiai}"></span></p>
+                                <p th:if="${loaiSanPham == 'Man Hinh'}"><strong>Tấm nền:</strong> <span
+                                                th:text="${chiTietSanPham.tamNen}"></span></p>
+                                <p th:if="${loaiSanPham == 'Man Hinh'}"><strong>Bề mặt:</strong> <span
+                                                th:text="${chiTietSanPham.beMat}"></span></p>
+                                <p th:if="${loaiSanPham == 'Man Hinh'}"><strong>Tần số quét:</strong> <span
+                                                th:text="${chiTietSanPham.tanSoQuet}"></span>Hz</p>
+                                <p th:if="${loaiSanPham == 'Man Hinh'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+                        <div th:if="${loaiSanPham == 'Case'}">
+                                <p th:if="${loaiSanPham == 'Case'}"><strong>Loại case:</strong> <span
+                                                th:text="${chiTietSanPham.loaiCase}"></span></p>
+                                <p th:if="${loaiSanPham == 'Case'}"><strong>Main hỗ trợ:</strong> <span
+                                                th:text="${chiTietSanPham.hoTroMain}"></span></p>
+                                <p th:if="${loaiSanPham == 'Case'}"><strong>Mô tả:</strong> <span
+                                                th:text="${chiTietSanPham.mota}"></span></p>
+                        </div>
+
+
+                </div>
+
+                <div class="mt-4 mb-3 container">
+                        <a href="/admin/quanlysanpham" class="btn btn-secondary">⬅ Trở lại danh sách</a>
+                        <a th:href="@{'/admin/quanlysanpham/capnhat/' + ${loaiSanPhamRutGon} + '/' + ${sanPham.id}}"
+                                class="btn btn-primary">Cập nhật sản
+                                phẩm</a>
+                </div>
+
+
+
+        </body>
+
+</html>

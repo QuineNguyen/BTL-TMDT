@@ -1,0 +1,64 @@
+<header class="bg-dark text-white py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="fs-3 fw-bold">PGearShop</div>
+
+            <form class="flex-grow-1 mx-3" role="search" action="/timkiem" method="get">
+                <input class="form-control" type="search" name="q" placeholder="Tìm kiếm sản phẩm..."
+                    aria-label="Search">
+            </form>
+
+            <div class="d-flex align-items-center">
+                <a href="/cart" class="btn btn-warning me-3">Giỏ hàng</a>
+
+                <!-- Nếu đã đăng nhập -->
+                <div class="dropdown" th:if="${nguoiDung != null}">
+                    <a class="custom-dropdown dropdown-toggle" href="#" role="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="'Xin chào, ' + ${nguoiDung.tenNguoiDung}">Xin chào, Tên</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" th:href="@{/thongtincanhan}">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dangxuat}">Đăng xuất</a></li>
+                    </ul>
+                </div>
+
+                <!-- Nếu chưa đăng nhập -->
+                <a href="/dangnhap" th:if="${nguoiDung == null}" class="btn btn-outline-light">Đăng nhập</a>
+            </div>
+        </div>
+    </header>
+
+
+<footer class="bg-dark text-light pt-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- Thông tin shop -->
+            <div class="col-md-4 mb-3">
+                <h5>PGearShop</h5>
+                <p>Chuyên cung cấp linh kiện máy tính chính hãng.<br />
+                    Địa chỉ: Km10 đường Trần Phú, quận Hà Đông, thành phố Hà Nội<br />
+                    SĐT: 0999 999 999<br />
+                    Email: contact@pgearshop.vn
+                </p>
+            </div>
+
+            <!-- Chính sách đổi trả -->
+            <div class="col-md-4 mb-3">
+                <h5>Chính sách đổi trả</h5>
+                <p>Hỗ trợ đổi trả trong vòng <strong>7 ngày</strong> nếu sản phẩm bị lỗi kỹ thuật hoặc không đúng mô tả.
+                </p>
+            </div>
+
+            <!-- Chính sách bảo hành -->
+            <div class="col-md-4 mb-3">
+                <h5>Bảo hành chính hãng</h5>
+                <p>Tất cả sản phẩm đều được bảo hành chính hãng từ <strong>6 đến 36 tháng</strong> tùy loại. Hỗ trợ bảo
+                    hành nhanh tại cửa hàng.</p>
+            </div>
+        </div>
+
+        <div class="text-center py-3 border-top border-secondary">
+            &copy; 2025 GearShop. All rights reserved.
+        </div>
+    </div>
+</footer>

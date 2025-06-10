@@ -1,0 +1,396 @@
+body {
+    font-family: Arial, sans-serif;
+    /* margin-left: 20px; */
+    /* padding: 20px; */
+    background: #f4f4f4;
+}
+
+.banner {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background-image: url('../images/banner/banner3.png');
+    /* đường dẫn banner của bạn */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 40px;
+    color: white;
+}
+
+.btn-warning.position-relative {
+    margin-right: 15px; /* Tạo khoảng cách bên phải giữa giỏ hàng và nút Đăng nhập */
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    color: #333;
+}
+
+.product-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+}
+
+.product-card {
+    flex: 0 0 18%; /* Giảm kích thước chiều rộng */
+    max-width: 180px; /* Giảm kích thước tối đa */
+    min-width: 160px; /* Giảm kích thước tối thiểu */
+    margin-right: 12px; /* Giảm khoảng cách giữa các thẻ */
+    background: white;
+    border-radius: 10px;
+    padding: 8px; /* Giảm padding */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    scroll-snap-align: start;
+}
+
+.product-card-image {
+    display: flex;
+    flex-direction: column;      /* xếp image + body theo cột */
+    width: 100%;                  /* hoặc flex: 0 0 18%; */
+    max-width: 300px;
+    min-width: 160px;
+    margin-right: 12px;
+    background: white;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;            /* ẩn tràn viền */
+    scroll-snap-align: start;
+    text-decoration: none;       /* bỏ gạch chân link */
+}
+
+/* Bắt image full-width của container */
+.product-card-image img {
+    display: block;
+    width: 150px;
+    height: 150px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.product-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 150px;
+    width: 150px;
+    display: block; /* Đảm bảo hình ảnh là block */
+    margin: 0 auto; /* Căn giữa hình ảnh */
+    border-radius: 4px; /* Bo góc ảnh */
+}
+
+.product-detail-image {
+    width: 100%;
+    /* Đảm bảo ảnh chiếm toàn bộ chiều rộng của container */
+    max-width: 300px;
+    /* Đặt kích thước tối đa */
+    height: auto;
+    /* Giữ tỷ lệ ảnh */
+    border-radius: 8px;
+    /* Bo góc ảnh */
+    margin-bottom: 20px;
+    /* Khoảng cách dưới ảnh */
+}
+
+.product-name {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+}
+
+.product-info {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.product-price {
+    color: #d0021b;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.nav-bar {
+    width: 100%;
+    background-color: #333;
+    padding: 10px 0;
+}
+
+.nav-items {
+    display: flex;
+    justify-content: center;
+    /* Căn giữa ngang */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-items li {
+    margin: 0 15px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.table {
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+.table th {
+    background-color: #555;
+    font-weight: bold;
+    text-align: left;
+    text-align: center;
+}
+
+.table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table td input[type="number"] {
+    text-align: center; /* Căn giữa nội dung trong input */
+    margin: 0 auto; /* Căn giữa input theo chiều ngang */
+    display: block; /* Đảm bảo input được căn giữa */
+}
+
+ul {
+    list-style-type: none; /* Loại bỏ kiểu danh sách mặc định */
+    padding: 0; /* Loại bỏ khoảng cách bên trong */
+    margin: 0; /* Loại bỏ khoảng cách bên ngoài */
+}
+
+.nav-items a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.nav-items a:hover {
+    color: #ffcc00;
+}
+
+/* Trường nhập số lượng */
+.form-control#quantityInput {
+    width: 80px; /* Tăng chiều rộng */
+    height: 40px; /* Tăng chiều cao */
+    font-size: 16px; /* Tăng kích thước chữ */
+    text-align: center; /* Căn giữa nội dung */
+    padding: 8px; /* Tăng padding */
+    margin-right: 15px; /* Khoảng cách bên phải */
+    border-radius: 5px; /* Bo góc */
+    border: 1px solid #ccc; /* Đường viền */
+}
+
+/* Nút Xác nhận */
+#btnConfirm {
+    height: 40px; /* Tăng chiều cao */
+    font-size: 16px; /* Tăng kích thước chữ */
+    padding: 8px 20px; /* Tăng padding */
+    border-radius: 5px; /* Bo góc */
+    background-color: #28a745; /* Màu nền */
+    color: white; /* Màu chữ */
+    border: none; /* Xóa đường viền */
+    cursor: pointer; /* Thay đổi con trỏ khi hover */
+}
+
+#btnConfirm:hover {
+    background-color: #218838; /* Màu nền khi hover */
+}
+
+/* Header styles */
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px 0;
+}
+
+header .fs-3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header a.no-underline {
+    text-decoration: none;
+    color: white;
+}
+
+header a.no-underline:hover {
+    color: #ffc107; /* Màu vàng nhạt khi hover */
+}
+
+.btn-warning.position-relative {
+    margin-right: 15px; /* Tạo khoảng cách bên phải giữa giỏ hàng và nút Đăng nhập */
+}
+
+
+footer h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+footer p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.custom-dropdown {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.custom-dropdown:focus,
+.custom-dropdown:hover {
+    color: #ffc107;
+    /* Màu khi hover (vàng nhạt) */
+    text-decoration: none;
+}
+
+.custom-dropdown::after {
+    margin-left: 5px;
+}
+
+/* Dropdown giỏ hàng */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* Hiển thị ngay bên dưới nút giỏ hàng */
+    left: auto;
+    right: 0; /* Căn phải */
+    z-index: 1050; /* Đảm bảo hiển thị đè lên các phần tử khác */
+    display: none; /* Ẩn menu mặc định */
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-menu.show {
+    display: block; /* Hiển thị menu khi có class "show" */
+}
+
+.dropdown-header {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+#cartItems {
+    max-height: 200px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Cuộn dọc nếu danh sách quá dài */
+}
+
+#cartItems p {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.dropdown-item {
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #ffc107;
+
+}
+
+#chatbotIcon {
+    z-index: 1000; /* Đảm bảo biểu tượng luôn hiển thị trên các thành phần khác */
+}
+
+#chatbotIcon a {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+#chatbotIcon a:hover {
+    transform: scale(1.1); /* Hiệu ứng phóng to khi hover */
+}
+
+#chat-container {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#chat-box {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 5px 0;
+    max-width: 70%;
+    align-self: flex-end;
+    text-align: left;
+}
+
+.bot-message {
+    background-color: #e9ecef;
+    color: black;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 5px 0;
+    max-width: 70%;
+    align-self: flex-start;
+    text-align: left;
+}
+
+#chat-box div {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.input-container input {
+    flex: 1;
+}
+
+.list-group-item.active {
+    background-color: #242424;
+}
+
+.no-underline {
+    text-decoration: none;
+    color: white;
+}

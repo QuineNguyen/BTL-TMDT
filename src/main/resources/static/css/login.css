@@ -1,0 +1,31 @@
+        body {
+            background-color: #191f26;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .login-container h2 {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .btn-login {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 14px;
+        }

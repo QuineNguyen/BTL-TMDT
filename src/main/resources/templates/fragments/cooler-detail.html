@@ -1,0 +1,5 @@
+<div th:fragment="coolerDetailFragment(chiTietSanPham)">
+    <p><strong>Loại tản:</strong> <span th:text="${chiTietSanPham.loaiTan}"></span></p>
+    <p><strong>Socket hỗ trợ LED:</strong> <span th:text="${chiTietSanPham.coLED} ? 'Có LED' : 'Không LED'"></span></p>
+    <p><strong>Mô tả:</strong> <span th:text="${chiTietSanPham.mota}"></span></p>
+</div>

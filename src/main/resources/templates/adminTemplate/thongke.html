@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Trang chủ Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <header class="bg-dark text-white py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="fs-3 fw-bold"><a class="no-underline" href="/admin/trangchu">PGearShop Administrator</a></div>
+
+            <div class="d-flex align-items-center">
+
+                <!-- Nếu đã đăng nhập -->
+                <div class="dropdown" th:if="${nguoiDung != null}">
+                    <a class="custom-dropdown dropdown-toggle no-underline" href="#" role="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="'Xin chào, ' + ${nguoiDung.tenNguoiDung}">Xin chào, Tên</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" th:href="@{/thongtincanhan}">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dangxuat}">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Thống kê Doanh thu</h2>
+
+        <!-- Tab lựa chọn ngày/tháng -->
+        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="ngay-tab" data-bs-toggle="tab" data-bs-target="#ngay" type="button"
+                    role="tab">Theo ngày</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="thang-tab" data-bs-toggle="tab" data-bs-target="#thang" type="button"
+                    role="tab">Theo tháng</button>
+            </li>
+        </ul>
+        <div class="tab-content" style="margin-bottom: 15%;">
+            <!-- Biểu đồ cột -->
+            <div class="tab-pane fade show active" id="ngay" role="tabpanel"
+                style="width:600px; height:300px; margin:auto;">
+                <h5>Biểu đồ cột: Doanh thu theo ngày</h5>
+                <canvas id="chartNgay"></canvas>
+                <table class="table table-bordered mt-3">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Doanh thu (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry : ${doanhThuNgay}">
+                            <td th:text="${entry.key}"></td>
+                            <td th:text="${#numbers.formatDecimal(entry.value, 0, 'COMMA', 2, 'POINT')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="thang" role="tabpanel" style="width:600px; height:300px; margin:auto;">
+                <h5>Biểu đồ cột: Doanh thu theo tháng</h5>
+                <canvas id="chartThang"></canvas>
+                <table class="table table-bordered mt-3">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Tháng</th>
+                            <th>Doanh thu (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry : ${doanhThuThang}">
+                            <td th:text="${entry.key}"></td>
+                            <td th:text="${#numbers.formatDecimal(entry.value, 0, 'COMMA', 2, 'POINT')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr class="my-4 mt-4">
+
+        <!-- Biểu đồ tròn -->
+        <h5>Biểu đồ tròn: Doanh thu theo loại sản phẩm</h5>
+        <canvas id="chartLoaiSP" style="width:600px; height:300px; margin:auto; margin-top: 5%;"></canvas>
+        <table class="table table-bordered mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th>Loại sản phẩm</th>
+                    <th>Doanh thu (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${doanhThuLoaiSP}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:text="${#numbers.formatDecimal(entry.value, 0, 'COMMA', 2, 'POINT')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        // Biểu đồ cột: Doanh thu theo ngày
+        const chartNgay = new Chart(document.getElementById('chartNgay'), {
+            type: 'bar',
+            data: {
+                labels: [[${ #lists.toList(doanhThuNgay.keySet()) }]],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: [[${ #lists.toList(doanhThuNgay.values()) }]],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                }]
+            }
+        });
+
+        // Biểu đồ cột: Doanh thu theo tháng
+        const chartThang = new Chart(document.getElementById('chartThang'), {
+            type: 'bar',
+            data: {
+                labels: [[${ #lists.toList(doanhThuThang.keySet()) }]],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: [[${ #lists.toList(doanhThuThang.values()) }]],
+                    backgroundColor: 'rgba(255, 206, 86, 0.5)'
+                }]
+            }
+        });
+
+        // Biểu đồ tròn: Doanh thu theo loại sản phẩm
+        const chartLoaiSP = new Chart(document.getElementById('chartLoaiSP'), {
+            type: 'pie',
+            data: {
+                labels: [[${ #lists.toList(doanhThuLoaiSP.keySet()) }]],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: [[${ #lists.toList(doanhThuLoaiSP.values()) }]],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 159, 64, 0.5)',
+                        'rgba(201, 203, 207, 0.5)',
+                        'rgba(255, 205, 86, 0.5)',
+                        'rgba(99, 255, 132, 0.5)'
+                    ]
+                }]
+            }
+        });
+    </script>
+</body>
+
+</html>

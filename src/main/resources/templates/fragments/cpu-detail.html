@@ -1,0 +1,5 @@
+<div th:fragment="cpuDetailFragment(chiTietSanPham)">
+    <p><strong>Loại CPU:</strong> <span th:text="${chiTietSanPham.loaiCPU}"></span></p>
+    <p><strong>Số nhân / luồng:</strong> <span th:text="${chiTietSanPham.soNhansoLuong}"></span></p>
+    <p><strong>Mô tả:</strong> <span th:text="${chiTietSanPham.mota}"></span></p>
+</div>
